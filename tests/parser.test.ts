@@ -205,6 +205,22 @@ for (const { name, parseSource } of parsers) {
     });
   }
 
+  void test(`${name} for-in accepts an optional var without changing classic for loops`, () => {
+    const source = 'for (var item in items) { total += item; }';
+    const program = parseSource(source);
+    assert.deepEqual(withoutSpans(program), withoutSpans(parseSource('for (item in items) { total += item; }')));
+    const loop = program.body[0];
+    assert.equal(loop?.type, 'ForInStatement');
+
+    assert.equal(loop.left.name, 'item');
+    assert.equal(loop.left.span.start.offset, source.indexOf('item'));
+    assert.equal(loop.span.start.offset, 0);
+    assert.equal(loop.span.end.offset, source.length);
+    assert.equal(parseSource('for (var index = 0; index < 3; index++) {}').body[0]?.type, 'ForStatement');
+    assert.throws(() => parseSource('for (var item = 1 in items) {}'), ParserSyntaxError);
+    assert.throws(() => parseSource('for (var item, other in items) {}'), ParserSyntaxError);
+  });
+
   void test(`${name} AST contract: source spans with CRLF and firstLine`, () => {
     const source = 'return name;\r\nreturn 2;';
     const program = parseSource(source, {
@@ -373,7 +389,7 @@ void test('leaves break/continue context to runtime but rejects non-name for-in 
     assert.doesNotThrow(() => parse(source));
   }
 
-  for (const source of ['for (var x in items) {}', 'for (var x = 1 in items) {}', 'for (var x, y in items) {}', 'for (x.value in items) {}']) {
+  for (const source of ['for (var x = 1 in items) {}', 'for (var x, y in items) {}', 'for (x.value in items) {}']) {
     assert.throws(() => parse(source), ParserSyntaxError);
   }
 

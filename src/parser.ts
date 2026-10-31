@@ -348,7 +348,11 @@ class SyntaxParser {
   private forStatement(start: Token): Statement {
     this.expect('(');
 
-    if (this.current.kind === 'identifier' && !keywords.has(this.current.text) && this.tokens[this.cursor + 1]?.text === 'in') {
+    const leftOffset = this.at('var') ? 1 : 0;
+    const leftToken = this.tokens[this.cursor + leftOffset];
+
+    if (leftToken?.kind === 'identifier' && !keywords.has(leftToken.text) && this.tokens[this.cursor + leftOffset + 1]?.text === 'in') {
+      this.match('var');
       const left = this.identifier(); this.expect('in');
       const right = this.expression(); this.expect(')');
       const body = this.statement();
