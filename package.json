@@ -1,8 +1,7 @@
 {
-  "name": "parser",
+  "name": "@wshcmx/parser",
   "version": "0.1.0",
-  "private": true,
-  "description": "Standalone parser for the SPXML scripting dialect",
+  "description": "Реализованный на Node.js парсер скриптов диалекта SPXML",
   "type": "module",
   "engines": {
     "node": ">=24"
@@ -21,17 +20,17 @@
     "build": "tsc -p tsconfig.json",
     "lint": "eslint . --max-warnings 0",
     "lint:fix": "eslint . --fix --max-warnings 0",
-    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.test.json",
-    "test": "node --test src/*.test.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tests/tsconfig.json",
+    "test": "node --test tests/*.test.ts",
     "prepack": "npm run build"
   },
   "devDependencies": {
-    "@eslint/js": "^10.0.0",
+    "@eslint/js": "^10.0.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/node": "^24.19.2",
     "eslint": "^10.14.0",
-    "globals": "^17.0.0",
-    "typescript": "~6.0.0",
+    "globals": "^17.13.0",
+    "typescript": "~6.0.3",
     "typescript-eslint": "^8.72.1"
   }
 }
