@@ -17,7 +17,7 @@ export default defineConfig(
     },
   },
   {
-    files: ['src/**/*.ts'],
+    files: ['src/**/*.ts', 'tests/**/*.ts'],
     plugins: { '@stylistic': stylistic },
     extends: [
       js.configs.recommended,
@@ -27,7 +27,7 @@ export default defineConfig(
     languageOptions: {
       globals: globals.node,
       parserOptions: {
-        project: './tsconfig.test.json',
+        project: './tests/tsconfig.json',
         tsconfigRootDir: import.meta.dirname,
       },
     },
