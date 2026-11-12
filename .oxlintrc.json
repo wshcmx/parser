@@ -1,0 +1,60 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "typescript"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error"
+  },
+  "options": {
+    "typeAware": true
+  },
+  "env": {
+    "node": true
+  },
+  "ignorePatterns": [
+    "dist/**",
+    "coverage/**"
+  ],
+  "jsPlugins": ["@stylistic/eslint-plugin"],
+  "rules": {
+    "eqeqeq": ["error", "always"],
+    "no-var": "error",
+    "prefer-const": "error",
+    "curly": ["error", "all"],
+    "typescript/consistent-type-imports": "error",
+    "typescript/no-explicit-any": "error",
+    "@stylistic/object-curly-newline": [
+      "error",
+      {
+        "TSInterfaceBody": "always",
+        "ObjectExpression": {
+          "multiline": true,
+          "minProperties": 2,
+          "consistent": true
+        }
+      }
+    ],
+    "@stylistic/object-property-newline": "error",
+    "@stylistic/no-trailing-spaces": "error",
+    "@stylistic/brace-style": ["error", "1tbs", { "allowSingleLine": false }],
+    "@stylistic/indent": ["error", 2],
+    "@stylistic/padding-line-between-statements": [
+      "error",
+      {
+        "blankLine": "always",
+        "prev": "*",
+        "next": ["if", "for", "while"]
+      },
+      {
+        "blankLine": "always",
+        "prev": ["if", "for", "while"],
+        "next": "*"
+      },
+      {
+        "blankLine": "always",
+        "prev": "interface",
+        "next": "*"
+      }
+    ]
+  }
+}

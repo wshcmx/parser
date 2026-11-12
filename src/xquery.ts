@@ -1,60 +1,94 @@
 export type XQueryNode =
-  | { k: 'lit';
+  | {
+    k: 'lit';
     v: string | bigint | number | boolean | null;
-    kind: 'str' | 'int' | 'real' | 'bool' | 'null' | 'date' }
-  | { k: 'path';
+    kind: 'str' | 'int' | 'real' | 'bool' | 'null' | 'date'
+  }
+  | {
+    k: 'path';
     v: string;
-    field: string }
-  | { k: 'foreign';
+    field: string
+  }
+  | {
+    k: 'foreign';
     path: Extract<XQueryNode, { k: 'path' }>;
-    field: string }
-  | { k: 'func';
+    field: string
+  }
+  | {
+    k: 'func';
     name: string;
-    args: XQueryNode[] }
-  | { k: 'seq';
-    items: XQueryNode[] }
-  | { k: 'arith';
+    args: XQueryNode[]
+  }
+  | {
+    k: 'seq';
+    items: XQueryNode[]
+  }
+  | {
+    k: 'arith';
     op: string;
     l: XQueryNode;
-    r: XQueryNode };
+    r: XQueryNode
+  };
 
 export type XQueryCondition =
-  | { k: 'and' | 'or';
+  | {
+    k: 'and' | 'or';
     l: XQueryCondition;
-    r: XQueryCondition }
-  | { k: 'cmp';
+    r: XQueryCondition
+  }
+  | {
+    k: 'cmp';
     op: string;
     l: XQueryNode;
-    r: XQueryNode }
-  | { k: 'bool';
-    e: XQueryNode }
-  | { k: 'some';
+    r: XQueryNode
+  }
+  | {
+    k: 'bool';
+    e: XQueryNode
+  }
+  | {
+    k: 'some';
     vars: XQueryBinding[];
-    cond: XQueryCondition };
+    cond: XQueryCondition
+  };
 
 export interface XQueryBinding {
   v: string;
   table: string
 }
+
 export interface XQueryOrder {
-  e: XQueryNode | { k: 'hier';
+  e: XQueryNode | {
+    k: 'hier';
     v: string;
-    args: XQueryNode[] };
+    args: XQueryNode[]
+  };
   desc: boolean
 }
+
 export interface XQueryFlwor {
   kind: 'flwor';
   binds: XQueryBinding[];
   where?: XQueryCondition;
   order: XQueryOrder[];
-  ret: { v: string;
+  ret: {
+    v: string;
     fields?: string[];
-    hier?: boolean };
+    hier?: boolean
+  };
   distinct: boolean;
 }
-export type XQuery = XQueryFlwor | { kind: 'catalog';
-  table: string } | { kind: 'hierarchy';
-    args: XQueryNode[] };
+
+export type XQuery =
+  | XQueryFlwor
+  | {
+    kind: 'catalog';
+    table: string;
+  }
+  | {
+    kind: 'hierarchy';
+    args: XQueryNode[];
+  };
 
 export class XQuerySyntaxError extends Error {
   constructor(message: string) {
@@ -67,6 +101,7 @@ interface Token {
   t: 'kw' | 'var' | 'id' | 'str' | 'num' | 'p';
   v: string
 }
+
 const keywords = new Set(['for', 'in', 'where', 'order', 'by', 'ascending', 'descending', 'return', 'some', 'satisfies', 'and', 'or', 'div', 'mod', 'distinct']);
 
 function lex(source: string): Token[] {
@@ -84,7 +119,7 @@ function lex(source: string): Token[] {
       let value = '';
       index++;
 
-      for (;;) {
+      for (; ;) {
         if (index >= source.length) {
           throw new XQuerySyntaxError('unterminated string');
         }
@@ -398,7 +433,7 @@ class QueryParser {
   operand(): XQueryNode {
     let left = this.term();
 
-    for (;;) {
+    for (; ;) {
       const token = this.current;
 
       if (token && ((token.t === 'p' && ['+', '-', '*'].includes(token.v)) || (token.t === 'kw' && ['div', 'mod'].includes(token.v)))) {
