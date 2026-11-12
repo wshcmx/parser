@@ -1,6 +1,6 @@
 {
   "name": "@wshcmx/parser",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Реализованный на Node.js парсер скриптов диалекта SPXML",
   "repository": {
     "type": "git",
