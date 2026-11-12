@@ -2,6 +2,13 @@
   "name": "@wshcmx/parser",
   "version": "0.1.0",
   "description": "Реализованный на Node.js парсер скриптов диалекта SPXML",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wshcmx/parser.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "engines": {
     "node": ">=24"
