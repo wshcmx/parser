@@ -3,8 +3,11 @@ export interface SqlToken {
   v: string;
   at?: number;
 }
-export type SqlNode = SqlToken | { k: 'group';
-  items: SqlNode[] };
+
+export type SqlNode = SqlToken | {
+  k: 'group';
+  items: SqlNode[]
+};
 
 export class SqlSyntaxError extends Error {
   constructor(message: string) {
@@ -48,7 +51,7 @@ export function tokenizeSql(source: string): SqlToken[] {
       index++;
       let value = '';
 
-      for (;;) {
+      for (; ;) {
         if (index >= source.length) {
           throw new SqlSyntaxError('unclosed quotation mark');
         }
@@ -77,7 +80,7 @@ export function tokenizeSql(source: string): SqlToken[] {
       let value = '';
       index++;
 
-      for (;;) {
+      for (; ;) {
         if (index >= source.length) {
           throw new SqlSyntaxError('unclosed identifier');
         }
@@ -132,7 +135,7 @@ export function tokenizeSql(source: string): SqlToken[] {
       }); index += word[0].length; continue;
     }
 
-    const operator = ['::','<>','!=','<=','>=','||','!<','!>'].find(value => source.startsWith(value, index)) ?? character;
+    const operator = ['::', '<>', '!=', '<=', '>=', '||', '!<', '!>'].find(value => source.startsWith(value, index)) ?? character;
     tokens.push({
       k: 'op',
       v: operator,

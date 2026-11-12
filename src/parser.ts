@@ -541,11 +541,12 @@ class SyntaxParser {
       };
     }
 
-    if (this.match('++') || this.match('--')) {
+    if (start.text === '++' || start.text === '--') {
+      this.take();
       const argument = this.assignable(this.prefix());
       return {
         type: 'UpdateExpression',
-        operator: start.text as '++' | '--',
+        operator: start.text,
         argument,
         prefix: true,
         span: this.span(start)
@@ -610,13 +611,17 @@ class SyntaxParser {
         };
       }
 
-      return {
-        type: 'Literal',
-        kind: token.text as 'null' | 'undefined',
-        raw: token.text,
-        ...(token.text === 'null' ? { value: null } : {}),
-        span: token.span
-      };
+      if (token.text === 'null' || token.text === 'undefined') {
+        return {
+          type: 'Literal',
+          kind: token.text,
+          raw: token.text,
+          ...(token.text === 'null' ? { value: null } : {}),
+          span: token.span
+        };
+      }
+
+      this.error('Expected a literal keyword');
     }
 
     if (this.match('this')) {
@@ -694,7 +699,7 @@ class SyntaxParser {
       this.error('Regular-expression literals are not supported', 'UNSUPPORTED_SYNTAX');
     }
 
-    this.error('Expected an expression');
+    return this.error('Expected an expression');
   }
   private member(object: Expression): Expression {
     if (this.match('.')) {
@@ -768,10 +773,13 @@ class SyntaxParser {
       }
     }
 
-    if (!this.current.lineBreakBefore && (this.match('++') || this.match('--'))) {
+    const operator = this.current.text;
+
+    if (!this.current.lineBreakBefore && (operator === '++' || operator === '--')) {
+      this.take();
       result = {
         type: 'UpdateExpression',
-        operator: this.previous.text as '++' | '--',
+        operator,
         argument: this.assignable(result),
         prefix: false,
         span: this.span(result)
